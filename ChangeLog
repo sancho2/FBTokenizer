@@ -1,4 +1,4 @@
-Version 1.01
+Version 1.01, February 07, 2018
 - Replaced TTokenizer class with Tokenizer namespace
 - Changed most(all) of TSymbols class to static. TODO: change to namespace
 - Added character column to TToken class (TToken.col)
