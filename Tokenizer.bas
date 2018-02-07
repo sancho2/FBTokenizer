@@ -1,6 +1,6 @@
 '----------------------------------------------------------------------------------------------------------------------
-' TTokenizer.bas
-' #include once "TTokenizer.bas"
+' Tokenizer.bas
+' #include once "Tokenizer.bas"
 '----------------------------------------------------------------------------------------------------------------------
 Function get_low_case(ByRef s As Const String) As String 
 	'
@@ -14,9 +14,11 @@ End Function
 #Define __ERROR_INFO "File: " & __FILE__ & " Function: " & __FUNCTION__ " Line: " &  __LINE__
 '----------------------------------------------------------------------------------------------------------------------
 #Include Once "TList.bas"
-#include once "SymbolList.bi"		
+#include once "SymbolList.bi"		' remove at end
+'----------------------------------------------------------------------------------------------------------------------
 #Include once "token2.bi"
 '----------------------------------------------------------------------------------------------------------------------
+'Common Shared As String source_text
 '----------------------------------------------------------------------------------------------------------------------
 Type TCharString
 	As String s
@@ -40,12 +42,15 @@ End Operator
 
 Type TTokenizer
 	Public:
+		'As TToken tokens(Any)
+
 		Declare Constructor()
 		Declare Constructor(ByRef source As Const String)
 		Declare Destructor()
 		
 		Declare Function load_file(ByRef file_name As String) As boolean
 		Declare Sub create_bas_file(ByRef file_name As String)
+		'Declare Property token(ByVal index As ULongInt) As TToken
 		Declare Function sub_text(ByVal first_char As ULongInt, ByVal last_char As ULongInt) As String
 		Declare Function get_text_section(ByRef index As Const TLocation) As String  
 	'Private:
@@ -62,6 +67,10 @@ Type TTokenizer
 		As TTokenList tokens
 		
 		Declare Sub _tokenize_source()
+		'Declare Static Function _add_token(ByRef tkn As TToken Ptr, ByRef tl As Const TTokenizer) As ULongInt       
+
+		Declare Sub parse_enums()
+		
 
 		Declare Sub _tokenize_comment()
 		Declare Sub _tokenize_multi_comment()
@@ -87,7 +96,9 @@ Type TTokenizer
 		Declare Sub _dump_tokens()
 End Type
 '----------------------------------------------------------------------------------------------------------------------
+'#include "Enums.bas"	' this uses TTokenizer so it has to come after it
 '----------------------------------------------------------------------------------------------------------------------
+
 ' this is out of wack and just this way for easy testing
 #Include "Tokenizer.bi"
 '----------------------------------------------------------------------------------------------------------------------
@@ -101,23 +112,20 @@ Function TTokenizer.sub_text(ByVal first_char As ULongInt, ByVal last_char As UL
 End Function
 Destructor TTokenizer()
 	'
+	?
 	? "TTokenizer destructor called"
 End Destructor
 Function TTokenizer.add_enum(ByVal node As TListNode Ptr) As UShort
 	'
+	'Dim As TListNode Ptr t
 	this._enum_count += 1
 	ReDim Preserve this._enum_nodes(1 To this._enum_count) 
 	this._enum_nodes(this._enum_count) = node
 	Return this._enum_count
 End Function
-'-----------------------------------------------------------------------------------------------------------
-' Main 
-'-----------------------------------------------------------------------------------------------------------
+'----------------------------------------------------------------------------------------------------------------------
 Dim As TTokenizer tk
 tk.load_file("code_test.bas")
 tk._tokenize_source()
 tk.tokens._dump_tokens_to_file("moomoo.bas")
-Sleep
-'-----------------------------------------------------------------------------------------------------------
-' Main 
-'-----------------------------------------------------------------------------------------------------------
+'Sleep

@@ -1,6 +1,6 @@
 '------------------------------------------------------------------------------------------
-' Token.bi
-' #include once "token.bi"
+' Token2.bi
+' #include once "token2.bi"
 '------------------------------------------------------------------------------------------
 Dim Shared As String source_text
 Type TLocation
@@ -92,6 +92,7 @@ Function TToken.get_length() As ULong
 End Function 
 '----------------------------------------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------------------------------------
+Type TKNLST As TTokenList
 Type TTokenList extends TList
 	'
 	Declare Function _dump_tokens_to_file(ByRef file_name As String) As boolean
@@ -172,4 +173,3 @@ Destructor TTokenList()
 	?
 	? "TTokenList destructor called"
 End Destructor
-

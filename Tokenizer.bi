@@ -1,6 +1,6 @@
 '----------------------------------------------------------------------------------------------------------------------
 ' Tokenizer.bi
-' #include once "Toknizer.bi"
+' #include once "Tokenizer.bi"
 '----------------------------------------------------------------------------------------------------------------------
 Operator *(ByVal t As TToken) As String 
 	'
@@ -147,6 +147,7 @@ Sub TTokenizer._tokenize_source()
 			ElseIf this_char = 39 Then		' ' - this is a comment
 				mode = mdComment
 					this._tokenize_comment()
+					Continue While 
 				mode = mdNone
 			
 			ElseIf __TS.is_identifier_char(this_char, id_loc) = TRUE Then	' identifier char
@@ -425,7 +426,12 @@ Sub TTokenizer._tokenize_multi_comment()
 		ElseIf this_char = 47 Then 	' / - this could be the start of a nested multi comment
 			If *n + 1< tlen Then
 				If z[*n + 1][0] = 39 Then	' this is a nested multicomment
+					t.index.last_char = *n - 2
+					this.tokens.add_token(@t, this._char_line) 
 					this._tokenize_multi_comment()
+					t = 0
+					t.index.first_char = *n + 1
+					t.token_type = ttCommentText
 				EndIf
 			Else
 				' we reached end of code prior to end of multi line comment
@@ -444,13 +450,6 @@ Sub TTokenizer._tokenize_multi_comment()
 	Wend
 
 End Sub 
-'Sub TTokenizer._dump_tokens()
-'	'
-'	For x As ULongInt = 1 To this._token_count
-'		? *this.tokens(x)
-'	Next
-' 	
-'End Sub
 Function TTokenizer._is_binary_string(ByRef t As TToken) As boolean
 	'
 	Dim As ZString Ptr z = this._text
