@@ -166,16 +166,16 @@ End Operator
 	
 '------------------------------------------------------------------------------------------
 Type __TS As  TSymbols
-Type  TSymbols
-	As String symbols(Any)
-	As UShort symbol_count
-	As UShort symbol_index(33 To 125)
-	As Byte index_count
+Type  TSymbols extends object
+	Static As String symbols(Any)
+	Static As UShort symbol_count
+	Static As UShort symbol_index(33 To 125)
+	Static As Byte index_count
 												'123456789 123456789 123456789 123456789 123456789 12345
 	Const _VALID_ID_CHARS ="ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz0123456789"
 
 	Declare Sub read_symbols()
-	Declare Function find_word(ByRef word As Const String) As UShort
+	Declare Static Function find_word(ByRef word As Const String) As UShort
 	Declare Function is_statement_separator (ByRef char As Byte) As boolean
 
 	Declare Static Function is_access_modifier(ByRef word As Const String, ByRef modifier As AccessModifier = amNone) As boolean
@@ -199,6 +199,11 @@ Type  TSymbols
 	Declare Static Function is_valid_char(ByRef char As Const Byte, ByRef list As Const String) As boolean
 	 
 End Type
+Dim As String TSymbols.symbols(Any)
+Dim As UShort TSymbols.symbol_count
+Dim As UShort TSymbols.symbol_index(33 To 125)
+Dim As Byte TSymbols.index_count
+
 Function TSymbols.is_keyword(ByRef keyword As Const String, ByRef word As Const string) As boolean
 	'
 	If (word[0] Or 32) <> (keyword[0] Or 32) OrElse Len(word) <> Len(keyword) Then Return FALSE
@@ -393,9 +398,9 @@ Sub  TSymbols.read_symbols()
 		n += 1
 		If n > max Then 
 			max += 100
-			ReDim Preserve this.symbols(1 To max)
+			ReDim Preserve __TS.symbols(1 To max)
 		EndIf
-		this.symbols(n) = s
+		__TS.symbols(n) = s
 		
 		If s[0] <> char AndAlso (s[0] Or 32) <> char Then
 			char = s[0]
@@ -403,14 +408,14 @@ Sub  TSymbols.read_symbols()
 			If char >= 65 AndAlso char <=90 Then
 				char or= 32
 			EndIf
-			this.symbol_index(char) = n
-			this.index_count = char_count 
+			__TS.symbol_index(char) = n
+			__TS.index_count = char_count 
 		EndIf
 		
 		Read s
 	Loop While Not s = ""
-	ReDim Preserve this.symbols(1 To n)
-	this.symbol_count = n
+	ReDim Preserve __TS.symbols(1 To n)
+	__TS.symbol_count = n
 End Sub
 Function  TSymbols.find_word(ByRef word As Const String) As UShort
 	'
@@ -418,14 +423,14 @@ Function  TSymbols.find_word(ByRef word As Const String) As UShort
 	Dim As UShort x
 	char = word[0]
 	char = IIf(char = 95, char, char Or 32)
-	x = this.symbol_index(char)
+	x = TSymbols.symbol_index(char)
 	
 	If x = 0 Then Return 0		' this letter is not in the index 
 	 
-	For n As UShort = x To this.symbol_count
-		If LCase(this.symbols(n)) = LCase(word) Then
+	For n As UShort = x To __TS.symbol_count
+		If LCase(__TS.symbols(n)) = LCase(word) Then
 			Return n
-		ElseIf (this.symbols(n)[0] Or 32) <> (word[0] Or 32) Then
+		ElseIf (__TS.symbols(n)[0] Or 32) <> (word[0] Or 32) Then
 			Exit For 
 		EndIf 
 	Next
@@ -437,6 +442,49 @@ Sub dump_index(ByVal kl As  TSymbols)
 		? x, chr(x), kl.symbol_index(x)
 	Next
 End Sub
+ 
+
+'Dim As  TSymbols tl 
+''? tl.is_hex(Asc("]"))
+''? __TS.is_hex(Asc("e"))
+''? __TS.is_sci_note(Asc("E"))
+'? __TS.is_float_suffix(Asc("#"))
+'? __TS.is_int_suffix(Asc("%"))
+'? tl.is_plus_minus(Asc("+"))
+'Sleep
+
+'Dim As String s 
+'Dim As  TSymbols k
+'k.read_symbols()
+''dump_index(k)
+'?
+'s = k.symbols(10) 
+'? s, s[0]
+'
+'s = "/"
+'? k.is_operator(s), s
+'
+'Dim As Double atime, btime, ctime, dtime
+'
+''atime = Timer
+''	For x As Integer = 1 To 1000
+''		k.find_word(s)
+''	Next 
+''btime = Timer - atime
+''ctime = Timer
+''	For x As Integer = 1 To 1000
+''		k.find_word_index(s)
+''	Next 
+''dtime = Timer - ctime
+'
+''?"ppp "; k.find_word(s) 
+'? "sss ";k.find_word_index(s)	
+'?
+''? btime
+''? dtime
+'Sleep
+'------------------------------------------------------------------------------------------
+' 
 '------------------------------------------------------------------------------------------
 Operators:	' (multi character) 
 Data "&=", "+=", "-=", "*=", "/=", "\=", "^=", "##", "()", "[]", "[]"
