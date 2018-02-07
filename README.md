@@ -2,6 +2,8 @@
 FreeBASIC Tokenizer
 Read Me Notes:
 -------------- 
+Updated to version 1.01 on February 07, 2018
+
 This FreeBASIC project is an FB tokenizer. It steps through source code and creates tokens out of the various
 symbols, identifiers, operators and keywords. 
 It is for learning and testing purposes only. 
@@ -16,7 +18,7 @@ will be overwritten.
 - split into 5 modules
 	- Tokenizer.bas	
 		- main file 
-		- contains declaration of TTokenizer class
+		- contains declaration of Tokenizer namespace
 	- Tokenizer.bi
 		- included by Tokenizer.bas module
 	`	- contains definition of TTokenizer class
@@ -26,11 +28,13 @@ will be overwritten.
 	- SymbolList.bi
 		- FB specific symbol routines
 		- included by Tokenizer.bas
-	- Token2.bi
+	- Token.bas
 		- Contains declaration and definition of TToken class
 		- included by TTokenizer class
 - I started with TTokenizer as a class. I think I will move this to a namespace. There will 
   never be a case where more than one instance of TTokenizer need occur. This is a TODO
+  This is done in version 1.01
+  
 - Function get_low_case()converts the passed text string to lowercase. I found this to be faster 
   than using lcase() but only on WinXP. On Linux Ubuntu lcase() is faster. I may remove this 
   function.
@@ -44,7 +48,7 @@ will be overwritten.
   t_text that is the reworked system. In some places a t_text token string is created but never used. This 
   needs to be cleaned up. 
 
-TTokenizer:
+Tokenizer:
 - get_text_section() is a function in more than one class. It simply gets a section of text from source_text.
   sub_text does the same thing. This will be removed. 
 - create_bas_file() is a rudimentary method that writes the tokens to a bas file. Its definition is commented
