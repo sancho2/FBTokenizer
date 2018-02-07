@@ -3,3 +3,4 @@ Version 1.01
 - Changed most(all) of TSymbols class to static. TODO: change to namespace
 - Added character column to TToken class (TToken.col)
 - Cleaned up lots of code
+- Renamed Token2.bi to Token.bas
