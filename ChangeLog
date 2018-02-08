@@ -1,3 +1,5 @@
+Version 1.02, February 08, 2018
+- replaced TSymbols class with FBSymbols namespace
 Version 1.01, February 07, 2018
 - Replaced TTokenizer class with Tokenizer namespace
 - Changed most(all) of TSymbols class to static. TODO: change to namespace
