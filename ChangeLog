@@ -1,3 +1,13 @@
+Version 1.03, February 08, 2018
+- renamed SymbolList.bas file to Symbols.bas
+- removed data statements from Symbols.bas
+- added file SymbolData.bas which contains the FB symbols in data statements 
+- updated symbols list to what I think is a complete list
+- converted data statements to lowercase and changed code to reflect that (and hopefully improve speed)
+- added get_item(index) function in TList
+    This function starts at the null node and iterates index times and returns that node.
+    Mostly useful for debugging
+    
 Version 1.02, February 08, 2018
 - replaced TSymbols class with FBSymbols namespace
 Version 1.01, February 07, 2018
