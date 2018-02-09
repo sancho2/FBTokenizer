@@ -1,3 +1,7 @@
+'------------------------------------------------------------------------------------------
+' TList.bas version 1.03
+' #include once "TList.bas"
+'------------------------------------------------------------------------------------------
 Type TListNode
     As Any Ptr pData
     As TListNode Ptr pNext
@@ -23,6 +27,7 @@ Type TList
 	Declare Function get_prev_item(ByVal node As TListNode Ptr) As TListNode Ptr
 	Declare Function get_data(ByVal node As TListNode Ptr) As Any Ptr
 	Declare Function remove_item(ByVal node As TListNode Ptr) As TListNode Ptr
+	Declare Function get_item(ByVal index As ULongInt) As TListNode Ptr
 	Declare Sub remove_all()
 	
 End Type
@@ -150,6 +155,17 @@ Constructor TList(ByRef node As TListNode Ptr = 0)
     this.null_node = CAllocate(Len(TListNode))
     node = this.null_node
 End Constructor
+Function TList.get_item(ByVal index As ULongInt) As TListNode Ptr
+	' 
+	Dim As TListNode Ptr node
+	If index > node_count Then Return 0
+	node = this.null_node
+	For x As ULongInt = 1 To index
+		If node->pNext = 0 Then Return 0
+		node = node->pNext
+	Next
+	Return node	 
+End Function
 '----------------------------------------------------------------------------------------------------------------
 '----------------------------------------------------------------------------------------------------------------
 'Sub dest_test()

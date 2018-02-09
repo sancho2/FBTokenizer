@@ -1,5 +1,5 @@
 '----------------------------------------------------------------------------------------------------------------------
-' Tokenizer.bas Version 1.02
+' Tokenizer.bas Version 1.03
 ' #include once "Tokenizer.bas"
 '----------------------------------------------------------------------------------------------------------------------
 Function get_low_case(ByRef s As Const String) As String 
@@ -17,8 +17,7 @@ Dim Shared As String source_text		' source code text
 
 '----------------------------------------------------------------------------------------------------------------------
 #Include Once "TList.bas"
-'#include once "SymbolList.bi"		' remove at end
-#include once "SymbolList.bas"		' remove at end
+#include once "Symbols.bas"		
 '----------------------------------------------------------------------------------------------------------------------
 #Include once "token.bas"
 '----------------------------------------------------------------------------------------------------------------------
@@ -81,7 +80,9 @@ End Namespace
 ' this is out of wack and just this way for easy testing
 #Include "Tokenizer.bi"
 '----------------------------------------------------------------------------------------------------------------------
-tokenizer.load_file("token2.bi")
-tokenizer.tokenize_source()
+tokenizer.load_file("token.bas")
+Tokenizer.tokenize_source()
+Dim As TListNode Ptr node = tokenizer.tokens.get_item(19)
+Dim As TToken Ptr tp = Cast(TToken Ptr, node->pData)
 tokenizer.tokens._dump_tokens_to_file("moomoo.bas")
  'Sleep
